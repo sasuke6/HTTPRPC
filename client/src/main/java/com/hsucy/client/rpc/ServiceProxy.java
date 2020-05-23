@@ -36,10 +36,13 @@ public class ServiceProxy<T> implements InvocationHandler {
         String argTypes = objectMapper.writeValueAsString(argTypeList);
         String argValues = objectMapper.writeValueAsString(args);
 
-        Result result = HttpUtil.callRemoteService(remoteClass.value(), method.getName(), argTypes, argValues);
+        // Result result = HttpUtil.callRemoteService(remoteClass.value(), method.getName(), argTypes, argValues);
+        Result result = ThrifCallUtil.callRemoteService(remoteClass.value(), method.getName(), argTypes, argValues);
 
         if (result.isSuccess()) {
-            return objectMapper.readValue(result.getResultValue(), Class.forName(result.getResultType()));
+            System.out.println(result.getResultValue());
+            // return objectMapper.readValue(result.getResultValue(), Class.forName(result.getResultType()));
+            return result.getResultValue();
         } else {
             throw new Exception("远程调用异常：" + result.getMessage());
 
